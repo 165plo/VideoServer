@@ -25,7 +25,7 @@ var (
 
 func main() {
 	http.HandleFunc("/List", List)
-	http.Handle("/", http.FileServer(http.Dir("./")))
+	http.Handle("/", http.FileServer(http.Dir("./Vids/")))
 	//http.Handle("/", new(viewHandler))
 	
     //http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,7 @@ func main() {
 
 func List(w http.ResponseWriter, r *http.Request){
 	fileText:=""
-	files, err := ioutil.ReadDir(".")
+	files, err := ioutil.ReadDir("./Vids")
 	if(err != nil){
 		fileText = `<p>No Files Found</p>`
 	}
@@ -52,24 +52,4 @@ func List(w http.ResponseWriter, r *http.Request){
 		
 	}
 	fmt.Fprintf(w, head + fileText + tail)
-}
-
-func (vh *viewHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path[1:]
-
-    data, err := ioutil.ReadFile(string(path))
-	
-	if err != nil {
-        log.Printf("Error with path %s: %v", path, err)
-        w.WriteHeader(404)
-        w.Write([]byte("404"))
-    }
-	
-	if strings.HasSuffix(path, ".html") {
-        w.Header().Add("Content-Type", "text/html")
-    } else if strings.HasSuffix(path, ".mp4") {
-        w.Header().Add("Content-Type", "video/mp4")
-    }
-	
-	w.Write(data)
 }
