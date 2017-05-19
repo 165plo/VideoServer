@@ -25,6 +25,7 @@ var (
 
 func main() {
 	http.HandleFunc("/List", List)
+	http.HandleFunc("/Watch/", Watch)
 	http.Handle("/", http.FileServer(http.Dir("./Vids/")))
 	//http.Handle("/", new(viewHandler))
 	
@@ -45,11 +46,17 @@ func List(w http.ResponseWriter, r *http.Request){
 	}
 	for _, file := range files {
 		if strings.Contains(strings.ToLower(file.Name()), "mp4"){
-			fileText += ("<video width=\"400\" controls><source src=\""+file.Name()+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
+			fileText += ("<a href=\"Watch/"+file.Name()+"\">link text</a>")
 		}else{
 			fileText += (`<p>` + file.Name() + `</p>`)
 		}
 		
 	}
+	fmt.Fprintf(w, head + fileText + tail)
+}
+
+func Watch(w http.ResponseWriter, r *http.Request){
+	fileToWatch := r.URL.Path[len("/view/"):]
+	fileText := ("<video width=\"400\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
 	fmt.Fprintf(w, head + fileText + tail)
 }
