@@ -20,7 +20,21 @@ var (
 <body>
 
 <h1>This is a Heading</h1>`
+
 	tail string =	`</body></html>`
+	
+	script string = `<script>
+	var vids = document.getElementsByTagName("video");
+	window.onload = function(){
+		for (var i =0;i<vids.length;i++){
+			vids[i].load();
+			vids[i].oncanplaythrough = function(){
+				this.play();
+				this.pause();
+			}
+		}
+	}
+	</script>`
 )
 
 func main() {
@@ -58,5 +72,5 @@ func List(w http.ResponseWriter, r *http.Request){
 func Watch(w http.ResponseWriter, r *http.Request){
 	fileToWatch := r.URL.Path[len("/view/"):]
 	fileText := ("<video width=\"400\" preload=\"none\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
-	fmt.Fprintf(w, head + fileText + tail)
+	fmt.Fprintf(w, head + fileText + script + tail)
 }
