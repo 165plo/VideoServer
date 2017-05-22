@@ -46,9 +46,9 @@ func List(w http.ResponseWriter, r *http.Request){
 	}
 	for _, file := range files {
 		if strings.Contains(strings.ToLower(file.Name()), "mp4"){
-			fileText += ("<a href=\"Watch/"+file.Name()+"\">"+file.Name()+"</a>\n")
+			fileText += ("<a href=\"Watch/"+file.Name()+"\">"+file.Name()+"</a>\n<br/>\n")
 		}else{
-			fileText += (`<p>` + file.Name() + `</p>`)
+			fileText += ("<p>" + file.Name() + "</p>\n<br/>\n")
 		}
 		
 	}
