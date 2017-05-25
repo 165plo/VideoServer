@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-type viewHandler struct{}
-
 var (
 	head string = `<!DOCTYPE html>
 <html>
@@ -32,6 +30,17 @@ var (
 				this.play();
 				this.pause();
 			}
+			
+			/*
+			vids[i].onended = function(){
+				this.play();
+				this.pause();
+				var sourceTag = document.getElementsByTagName("source");
+				var path = sourceTag[0].src;
+				path
+				sourceTag[0].src = "";
+			}
+			*/
 		}
 	}
 	</script>`
@@ -41,18 +50,21 @@ func main() {
 	http.HandleFunc("/List", List)
 	http.HandleFunc("/Watch/", Watch)
 	http.Handle("/", http.FileServer(http.Dir("./Vids/")))
-	//http.Handle("/", new(viewHandler))
-	
-    //http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-    //    fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-    //})
-
-
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
 
 func List(w http.ResponseWriter, r *http.Request){
+	fmt.Fprintf(w, head + getVideos() + tail)
+}
+
+func Watch(w http.ResponseWriter, r *http.Request){
+	fileToWatch := r.URL.Path[len("/view/"):]
+	fileText := ("<video width=\"400\" preload=\"none\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
+	fmt.Fprintf(w, head + fileText + script + tail)
+}
+
+func getVideos() string{
 	fileText:=""
 	files, err := ioutil.ReadDir("./Vids")
 	if(err != nil){
@@ -66,11 +78,5 @@ func List(w http.ResponseWriter, r *http.Request){
 		}
 		
 	}
-	fmt.Fprintf(w, head + fileText + tail)
-}
-
-func Watch(w http.ResponseWriter, r *http.Request){
-	fileToWatch := r.URL.Path[len("/view/"):]
-	fileText := ("<video width=\"400\" preload=\"none\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
-	fmt.Fprintf(w, head + fileText + script + tail)
+	return fileText;
 }
