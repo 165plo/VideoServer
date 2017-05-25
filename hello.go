@@ -23,24 +23,28 @@ var (
 	
 	script string = `<script>
 	var vids = document.getElementsByTagName("video");
+	var firstVid = true;
 	window.onload = function(){
 		for (var i =0;i<vids.length;i++){
 			vids[i].load();
 			vids[i].oncanplaythrough = function(){
-				this.play();
-				this.pause();
+				if(firstVid){
+					this.play();
+					this.pause();
+				}
 			}
 			
-			/*
+			
 			vids[i].onended = function(){
-				this.play();
-				this.pause();
-				var sourceTag = document.getElementsByTagName("source");
-				var path = sourceTag[0].src;
-				path
-				sourceTag[0].src = "";
+				if(firstVid){
+					var sourceTag = document.getElementsByTagName("source");
+					sourceTag[0].src = "/mov_bbb.mp4";
+					this.load();
+					this.play();
+					firstVid = false;
+				}
 			}
-			*/
+			
 		}
 	}
 	</script>`
