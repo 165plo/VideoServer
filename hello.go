@@ -63,7 +63,8 @@ func List(w http.ResponseWriter, r *http.Request){
 }
 
 func Watch(w http.ResponseWriter, r *http.Request){
-	fileToWatch := r.URL.Path[len("/view/"):]
+	fileToWatch := r.URL.Path[len("/Watch"):]
+	fmt.Printf("%q", r.URL.Path)
 	fileText := ("<video width=\"400\" preload=\"none\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
 	fmt.Fprintf(w, head + fileText + script + tail)
 }
