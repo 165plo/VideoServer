@@ -34,17 +34,21 @@ var (
 				}
 			}
 			
-			/*
 			vids[i].onended = function(){
-				if(firstVid){
-					var sourceTag = document.getElementsByTagName("source");
-					sourceTag[0].src = "/Eureka Season 2 Ep 1.mp4";
+				var sourceTag = document.getElementsByTagName("source");
+				var splitSource = sourceTag[0].src.split('/');
+				var filename = splitSource[splitSource.length-1];
+				var newUrl = document.URL.replace(filename+';',"");
+				window.history.pushState("","",newUrl);
+				if(!newUrl.endsWith('=')){
+					var newVid = newUrl.split('?')[1].split(';')[0].split('=')[1];
+					sourceTag[0].src = "/" + newVid;
 					this.load();
 					this.play();
 					firstVid = false;
 				}
 			}
-			*/
+			
 		}
 	}
 	</script>`
