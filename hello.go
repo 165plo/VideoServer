@@ -52,7 +52,7 @@ var (
 
 func main() {
 	http.HandleFunc("/List", List)
-	http.HandleFunc("/Watch/", Watch)
+	http.HandleFunc("/Watch", Watch)
 	http.Handle("/", http.FileServer(http.Dir("./Vids/")))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
@@ -63,8 +63,10 @@ func List(w http.ResponseWriter, r *http.Request){
 }
 
 func Watch(w http.ResponseWriter, r *http.Request){
-	fileToWatch := r.URL.Path[len("/Watch"):]
-	fmt.Printf("%q", r.URL.Path)
+	//fileToWatch := r.URL.Path[len("/Watch"):]
+	//fmt.Printf("%q", r.URL.Path)
+	queryMap := r.URL.Query();
+	fileToWatch := queryMap["Vids"][0];
 	fileText := ("<video width=\"400\" preload=\"none\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
 	fmt.Fprintf(w, head + fileText + script + tail)
 }
@@ -77,7 +79,7 @@ func getVideos() string{
 	}
 	for _, file := range files {
 		if strings.Contains(strings.ToLower(file.Name()), "mp4"){
-			fileText += ("<a href=\"Watch/"+file.Name()+"\">"+file.Name()+"</a>\n<br/>\n")
+			fileText += ("<a href=\"Watch?Vids="+file.Name()+"\">"+file.Name()+"</a>\n<br/>\n")
 		}else{
 			fileText += ("<p>" + file.Name() + "</p>\n<br/>\n")
 		}
