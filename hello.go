@@ -34,17 +34,17 @@ var (
 				}
 			}
 			
-			
+			/*
 			vids[i].onended = function(){
 				if(firstVid){
 					var sourceTag = document.getElementsByTagName("source");
-					sourceTag[0].src = "/mov_bbb.mp4";
+					sourceTag[0].src = "/Eureka Season 2 Ep 1.mp4";
 					this.load();
 					this.play();
 					firstVid = false;
 				}
 			}
-			
+			*/
 		}
 	}
 	</script>`
