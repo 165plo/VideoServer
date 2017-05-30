@@ -41,7 +41,7 @@ var (
 				window.history.pushState("","",newUrl);
 				if(!newUrl.endsWith('=')){
 					var newVid = newUrl.split('?')[1].split(';')[0].split('=')[1];
-					sourceTag[0].src = newVid;
+					sourceTag[0].src = unescape(newVid);
 					this.load();
 					this.play();
 					firstVid = false;
