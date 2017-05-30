@@ -14,6 +14,8 @@ var (
 <html>
 <head>
 <title>Page Title</title>
+<script type="text/javascript"
+        src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 </head>
 <body>
 
@@ -22,6 +24,19 @@ var (
 	tail string =	`</body></html>`
 	
 	script string = `<script>
+	
+	initializeCastApi = function() {
+		cast.framework.CastContext.getInstance().setOptions({
+			receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
+		});
+	};	
+	
+	window['__onGCastApiAvailable'] = function(isAvailable) {
+		if (isAvailable) {
+			initializeCastApi();
+		}
+	};
+
 	var vids = document.getElementsByTagName("video");
 	var firstVid = true;
 	window.onload = function(){
@@ -99,7 +114,7 @@ func Watch(w http.ResponseWriter, r *http.Request){
 	//fmt.Printf("%q", r.URL.Path)
 	queryMap := r.URL.Query();
 	fileToWatch := queryMap["Vids"][0];
-	fileText := ("<video width=\"400\" preload=\"none\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video>")
+	fileText := ("<video width=\"400\" preload=\"none\" controls><source src=\""+fileToWatch+"\" type=\"video/mp4\">Your browser does not support HTML5 video.</video><button is=\"google-cast-button\">CAST</button>")
 	
 	fmt.Fprintf(w, head + fileText + script + tail)
 }
