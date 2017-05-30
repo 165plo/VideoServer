@@ -36,13 +36,12 @@ var (
 			
 			vids[i].onended = function(){
 				var sourceTag = document.getElementsByTagName("source");
-				var splitSource = sourceTag[0].src.split('/');
-				var filename = splitSource[splitSource.length-1];
-				var newUrl = document.URL.replace(filename+';',"");
+				var filename = sourceTag[0].getAttribute("src");
+				var newUrl = document.URL.replace(escape(filename)+';',"");
 				window.history.pushState("","",newUrl);
 				if(!newUrl.endsWith('=')){
 					var newVid = newUrl.split('?')[1].split(';')[0].split('=')[1];
-					sourceTag[0].src = "/" + newVid;
+					sourceTag[0].src = newVid;
 					this.load();
 					this.play();
 					firstVid = false;
@@ -59,7 +58,7 @@ var (
 			var inputInfo = divs[i].getElementsByTagName("input");
 			var value = inputInfo[0].value;
 			if(value != ""){
-				var vid = divs[i].getElementsByTagName("a")[0].text;
+				var vid = divs[i].getElementsByTagName("a")[0].getAttribute("href").replace("/Watch?Vids=","");
 				var o = {"order":value, "vid":vid};
 				vidList.push(o);
 			}
@@ -115,7 +114,7 @@ func getVideos(path string) string{
 		fileText += "<div>"
 		fileText += "<input type=\"text\" name=\"order\" size=1>   "
 		if strings.Contains(strings.ToLower(file.Name()), "mp4"){
-			fileText += ("<a href=\"Watch?Vids="+file.Name()+"\">"+file.Name()+"</a>\n<br/>\n")
+			fileText += ("<a href=\"/Watch?Vids="+ strings.Replace(path, "./Vids", "", -1) + "/" +file.Name()+"\">"+file.Name()+"</a>\n<br/>\n")
 		} else if file.IsDir() {
 			fileText += ("<a href=\"" + strings.Replace(path, "./Vids", "/List", -1) + "/" + file.Name() + "\">"+file.Name()+"</a>\n<br/>\n")
 		} else{
