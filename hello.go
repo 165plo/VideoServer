@@ -124,4 +124,4 @@ func getVideos(path string) string{
 	}
 	fileText += "<button onclick=\"createVidPlaylist()\" type=\"button\">Play Videos</button>"
 	return fileText;
-}
+} 
